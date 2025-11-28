@@ -137,6 +137,12 @@ body {
   font-weight: 700;
 }
 
+.modal-content .hint-btn, 
+.modal-content #hints-section {
+  width: 100%; /* Fill the container */
+  max-width: 350px; /* Limit the maximum width */
+}
+
 .close-btn {
   float: right;
   font-size: 20px;
@@ -190,4 +196,48 @@ body {
 
 .question-game p {
   font-size: 1.1rem;
+}
+
+.hint-btn {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  /* Subtler style: dark border, minimal background */
+  background: rgba(0, 0, 0, 0.2); 
+  color: #ccc;
+  border: 1px solid rgba(255, 215, 0, 0.5); /* Semi-transparent gold border */
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 400; /* Less bold */
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  transition: all 0.1s;
+  box-sizing: border-box;
+  margin-top: 10px; /* Space it below the submit button */
+}
+.hint-btn:active {
+  box-shadow: 0 0 0 black;
+  transform: translateY(1px);
+}
+
+/* Hint List Styling */
+#hint-list {
+  list-style: none;
+  padding: 10px;
+  margin: 3px 0 0 0; /* Added top margin */
+  text-align: left;
+  border: 1px dashed var(--color-gold);
+  border-radius: 5px;
+  background-color: rgba(0, 77, 64, 0.5); /* Semi-transparent deep green */
+  min-height: 20px; /* Ensure space even if empty */
+  font-family: "Roboto", sans-serif;
+}
+#hint-list li {
+  padding: 5px 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: opacity 0.5s ease-in-out; /* Add transition for fade-in */
+}
+#hint-list li:last-child {
+  border-bottom: none;
 }

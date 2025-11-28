@@ -40,10 +40,10 @@
             Submit Answer
           </button>
 
-          <div id="hint-btn" class="w-full">
-            <ul id="hint-lsit">
-
-            </ul>
+          <button class="hint-btn" onclick="revealNextHint()">Show Hints</button>
+          <div id="hints-section" class="w-full">
+            <ul id="hint-list"></ul>
+          </div>
           </div>
         </div>
       </div>
@@ -111,10 +111,60 @@
         document.getElementById("input").value = "";
 
         currentHintIndex = 0;
-        const hintButton = document.querySelector(".hint-btn")
-        const totalHints = 
+        const hintButton = document.querySelector(".hint-btn");
+        
+        // Clear previous hints from the list
+        document.getElementById("hint-list").innerHTML = ''; 
+        
+        // Set up the hint button state
+        const totalHints = questionObj.hints.length;
+        if (totalHints > 0) {
+            hintButton.textContent = `Show First Hint (1 of ${totalHints})`;
+            hintButton.disabled = false;
+        } else {
+            hintButton.textContent = "No Hints Available";
+            hintButton.disabled = true;
+        }
+
         document.getElementById("modal").classList.add("active");
         document.getElementById("input").focus();
+      }
+
+      window.revealNextHint = function() {
+          if (!currentTile) return;
+          
+          const hintList = document.getElementById("hint-list");
+          const hintButton = document.querySelector(".hint-btn");
+          const totalHints = currentTile.hints.length;
+          
+          if (currentHintIndex < totalHints) {
+              const hintText = currentTile.hints[currentHintIndex];
+              
+              // Create the new list item
+              const listItem = document.createElement('li');
+              // Add a slight delay/fade-in effect for each hint
+              listItem.textContent = `Hint ${currentHintIndex + 1}: ${hintText}`;
+              listItem.style.opacity = '0';
+              
+              // Append and fade in
+              hintList.appendChild(listItem);
+              
+              // Small timeout to allow the element to be rendered before applying transition
+              setTimeout(() => {
+                  listItem.style.opacity = '1';
+              }, 10); 
+              
+              currentHintIndex++; // Move to the next hint
+              
+              if (currentHintIndex < totalHints) {
+                  // Update button for next hint
+                  hintButton.textContent = `Show Next Hint (${currentHintIndex + 1} of ${totalHints})`;
+              } else {
+                  // All hints revealed
+                  hintButton.textContent = "All Hints Revealed";
+                  hintButton.disabled = true;
+              }
+          }
       }
 
       function closeModal() {
