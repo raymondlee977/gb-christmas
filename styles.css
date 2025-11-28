@@ -1,0 +1,193 @@
+/* --- BODY & GENERAL STYLES --- */
+:root {
+  --color-red: #8B0000; /* Deep Christmas Red */
+  --color-green: #004D40; /* Forest Green */
+  --color-gold: rgb(255,215,0); /* Gold Accent */
+}
+
+.font-theme {
+  font-family: 'Cinzel Decorative', serif;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: 'Cinzel Decorative', serif;
+  
+  background-image: url('./assets/christmas-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#game-container {
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.grid-wrapper {
+  position: relative;
+  width: min(90vw, 90vh); 
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border: 6px solid var(--color-gold);
+  border-radius: 8px;
+  box-shadow: 0 0 30px var(--color-gold), 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.answer-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.answer-image.visible {
+  opacity: 1;
+}
+
+#final-reveal {
+  display: none;
+  margin-top: 20px;
+  font-size: clamp(18px, 6vw, 40px);
+  color: var(--color-gold);
+  text-shadow: 2px 2px 4px var(--color-gold);
+}
+
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  z-index: 1;
+}
+
+.tile {
+  background-color: var(--color-red);
+  border: 1px solid var(--color-gold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1rem, 5vw, 2rem);
+  color: rgb(255, 255, 255);
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+}
+
+.tile.revealed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  backdrop-filter: blur(5px);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: var(--color-red); /* Red container */
+  padding: 30px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: white;
+  border: 4px solid var(--color-gold);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-family: "Cinzel Decorative", serif;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: rgb(255, 255, 255);
+}
+
+.submit-btn {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  background: linear-gradient(to top, #2d6328, #4c9a2a); /* Green gradient */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%; /* Changed from 90% */
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 700;
+  box-shadow: 0 4px 0 #1b4717; /* 3D effect */
+  transition: all 0.1s;
+}
+.submit-btn:active {
+    box-shadow: 0 1px 0 #1b4717;
+    transform: translateY(3px);
+}
+
+.input {
+  width: 100%; /* Changed from 90% */
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid var(--color-gold);
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Cinzel Decorative', serif;
+  color: #333;
+  background-color: #fffaf0;
+  box-sizing: border-box; /* FIX: Include padding/border in width */
+}
+
+.question-game {
+ display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.question-game p {
+  font-size: 1.1rem;
+}

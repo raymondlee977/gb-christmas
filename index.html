@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Escape Grid</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="main-content">
+      <div id="game-container">
+        <div class="grid-wrapper">
+          <div class="grid" id="grid"></div>
+          <img class="answer-image" src="./assets/answer-image.jpg" alt="Hidden image" />       
+        </div>
+        <div id="final-reveal">🎉 Congrats! 🎉</div>
+      </div>
+    </div>
+    
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2 id="question-title"></h2>
+        <div class="question-game">
+          <p id="question" class="white-space-preline"></p>
+          <input
+            type="text"
+            id="input"
+            class="input"
+            placeholder="Type your answer..."
+          />
+          <button class="submit-btn" onclick="handleSubmit()">
+            Submit Answer
+          </button>
+
+          <div id="hint-btn" class="w-full">
+            <ul id="hint-lsit">
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+    <script>
+      const tileQuestions = [
+        {
+          tileIndex: 0,
+          title: "Puzzle 1",
+          question: "What's the special digit?",
+          answer: "8",
+          hints: ["Find the correct letters", "Form into a sentence", "Verse"],
+          requiresPrevious: null,
+        },
+        {
+          tileIndex: 1,
+          title: "Puzzle 2",
+          question: "What's the code?",
+          answer: "10",
+          hints: ["Look @ the CAPS", "2 digits", "Perfect _ _ _"],
+          requiresPrevious: 0,
+        },
+        {
+          tileIndex: 2,
+          title: "Puzzle 3",
+          question: "What was promised?",
+          answer: "salvation",
+          hints: ["2000s comms", "Image of keypad"],
+          requiresPrevious: 1,
+        },
+      ]
+      window.onload = () => {
+        const grid = document.getElementById("grid");
+
+        for (let i = 0; i < 3; i++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.setAttribute("data-tile-index", i);
+          const questionTile = tileQuestions.find((q) => q.tileIndex === i);
+          if (isTileRevealed(i)) {
+            tile.classList.add("revealed");
+          }
+          
+          tile.textContent = questionTile.title;
+          tile.onclick = () => {
+            openModal(questionTile);
+          }
+
+          grid.append(tile)
+        }
+        checkAndShowBackground();
+        checkAllRevealed();
+      }
+
+      let currentTile = null;
+      let currentHintIndex = 0;
+
+      function openModal(questionObj) {
+        currentTile = questionObj;
+        document.getElementById("question-title").textContent = questionObj.title;
+        document.getElementById("question").textContent =
+          questionObj.question;
+        document.getElementById("input").value = "";
+
+        currentHintIndex = 0;
+        const hintButton = document.querySelector(".hint-btn")
+        const totalHints = 
+        document.getElementById("modal").classList.add("active");
+        document.getElementById("input").focus();
+      }
+
+      function closeModal() {
+        document.getElementById("modal").classList.remove("active");
+      }
+
+      function revealTile(tile) {
+        tile.classList.add("revealed");
+        checkAndShowBackground();
+        saveGameState();
+        checkAllRevealed();
+      }
+
+      function handleSubmit() {
+        const inputAnswer = document
+          .getElementById("input")
+          .value.trim()
+          .toLowerCase();
+        if (inputAnswer === currentTile.answer.toLowerCase()) {
+          closeModal();
+          revealTile(
+            document.querySelector(
+              `[data-tile-index="${currentTile.tileIndex}"]`
+            )
+          );
+        }
+      }
+
+      function saveGameState() {
+        const revealedTiles = Array.from(
+          document.querySelectorAll(".tile.revealed")
+        ).map((tile) => parseInt(tile.getAttribute("data-tile-index")));
+
+        sessionStorage.setItem(
+          "gridRevealed",
+          JSON.stringify(revealedTiles)
+        );
+      }
+
+      function loadGameState() {
+        const saved = sessionStorage.getItem("gridRevealed");
+        if (!saved) {
+          console.log("🎮 Starting fresh game session!");
+          return [];
+        }
+
+        try {
+          const tiles = JSON.parse(saved);
+          return tiles;
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function isTileRevealed(tileIndex) {
+        const revealed = loadGameState();
+        return revealed.includes(tileIndex);
+      }
+
+      function checkAndShowBackground() {
+        const tiles = document.querySelectorAll(".tile");
+        const anyRevealed = Array.from(tiles).some((tile) =>
+          tile.classList.contains("revealed")
+        );
+
+        if (anyRevealed) {
+          document.querySelector(".answer-image").classList.add("visible");
+        }
+      }
+
+      function checkAllRevealed() {
+        const tiles = document.querySelectorAll(".tile");
+        const allRevealed = Array.from(tiles).every((tile) =>
+          tile.classList.contains("revealed")
+        );
+
+        if (allRevealed) {
+          document.getElementById("final-reveal").style.display = "block";
+        }
+      }
+    </script>
+  </body>
+</html>
